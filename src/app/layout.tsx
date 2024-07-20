@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Google",
+  title: "SWE-SDE",
   description: "Sidharth",
 };
 

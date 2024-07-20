@@ -1,6 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { FaGoogle } from "react-icons/fa";
+import { FaMicrosoft } from "react-icons/fa";
+import { FaApple } from "react-icons/fa";
+import { FaMeta } from "react-icons/fa6";
+import { FaAmazon } from "react-icons/fa";
 
 export default function Page() {
   const [data, setData] = useState([]);
@@ -82,7 +87,16 @@ export default function Page() {
             onSubmit={handlePasswordSubmit}
             className="flex flex-col items-center justify-center h-[100vh]"
           >
-            <h2 className="text-2xl font-semibold mb-4">Encrypted</h2>
+            <div className="flex space-x-4 pb-4 text-3xl">
+              <FaGoogle />
+              <FaApple />
+              <FaMeta />
+              <FaAmazon />
+              <FaMicrosoft />
+            </div>
+            <h2 className="text-2xl font-semibold mb-4 text-green-500">
+              Encrypted
+            </h2>
             <input
               type="password"
               value={password}
@@ -102,14 +116,21 @@ export default function Page() {
         <div className="py-24 px-4 md:px-16">
           <Toaster />
           <h1 className="text-2xl text-center flex-1 md:text-4xl py-6 px-4 font-medium">
-            Software Developer Engineer
+            Software (Developer) Engineer
           </h1>
+          <div className="flex space-x-4 py-4 text-3xl w-full items-center justify-center">
+            <FaGoogle />
+            <FaApple />
+            <FaMeta />
+            <FaAmazon />
+            <FaMicrosoft />
+          </div>
           {Object.entries(groupedData).map(([topic, questions]) => (
             <div key={topic} className="py-6">
-              <h2 className="font-mono mb-8 text-2xl text-center flex-1 md:text-4xl">
+              <h2 className="font-mono mb-8 text-xl py-2 px-4 rounded-lg mx-4 text-center md:text-2xl">
                 {topic === "DP" ? "Dynamic Programming" : topic}
               </h2>
-              <div className="grid grid-cols-1 gap-8">
+              <div className="grid grid-cols-1 gap-x-8 gap-y-4">
                 {questions.map((question, index) => (
                   <div
                     key={question._id}
