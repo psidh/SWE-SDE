@@ -1,0 +1,189 @@
+"use client";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+
+export default function Page() {
+  const [data, setData] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
+  const [localEditData, setLocalEditData] = useState(null);
+  const [password, setPassword] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false); //
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("http://localhost:3000/api/v1", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setData(data);
+    };
+
+    fetchData();
+  }, []);
+
+  const handleEditClick = (index) => {
+    setEditIndex(index);
+    setLocalEditData(data[index]);
+  };
+
+  const handleChange = (field, value) => {
+    setLocalEditData({ ...localEditData, [field]: value });
+  };
+
+  const handleUpdateClick = async () => {
+    try {
+      await fetch("http://localhost:3000/api/v1", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([localEditData]),
+      });
+      const updatedData = [...data];
+      updatedData[editIndex] = localEditData;
+      setData(updatedData);
+      setEditIndex(null);
+      toast.success("Data updated successfully!");
+    } catch (error) {
+      toast.error("Failed to update data!");
+      console.error("Failed to update data:", error);
+    }
+  };
+
+  const groupByTopic = (questions) => {
+    const grouped = {};
+    ["Graph", "Tree", "Recursion", "DP"].forEach((topic) => {
+      grouped[topic] = questions.filter((q) => q.topic === topic);
+    });
+    return grouped;
+  };
+
+  const groupedData = groupByTopic(data);
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    toast.loading("Authenticating...", { duration: 1000 });
+    if (password === "19022023") {
+      toast.success("Authenticated!", { duration: 2000 });
+      setIsAuthenticated(true);
+    } else {
+      toast.error("Incorrect password!", { duration: 2000 });
+    }
+  };
+
+  return (
+    <div>
+      {!isAuthenticated ? (
+        <div className="flex flex-col items-center">
+          <Toaster />
+          <form
+            onSubmit={handlePasswordSubmit}
+            className="flex flex-col items-center justify-center h-[100vh]"
+          >
+            <h2 className="text-2xl font-semibold mb-4">Encrypted</h2>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="border bg-black border-neutral-800 rounded py-2 px-4 mb-4 text-white"
+              placeholder="Enter code"
+            />
+            <button
+              type="submit"
+              className="bg-neutral-800 text-white py-2 px-4 rounded w-full"
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+      ) : (
+        <div className="py-24 px-4 md:px-16">
+          <Toaster />
+          <h1 className="text-2xl text-center flex-1 md:text-4xl py-6 px-4 font-medium">
+            Software Developer Engineer
+          </h1>
+          {Object.entries(groupedData).map(([topic, questions]) => (
+            <div key={topic} className="py-6">
+              <h2 className="font-mono mb-8 text-2xl text-center flex-1 md:text-4xl">
+                {topic === "DP" ? "Dynamic Programming" : topic}
+              </h2>
+              <div className="grid grid-cols-1 gap-8">
+                {questions.map((question, index) => (
+                  <div
+                    key={question._id}
+                    className="flex items-center border border-neutral-800 rounded-xl p-4"
+                  >
+                    {editIndex === index ? (
+                      <>
+                        <input
+                          type="text"
+                          className="flex-1 mr-4 py-2 px-4 bg-neutral-900 text-white rounded"
+                          value={localEditData.name}
+                          onChange={(e) => handleChange("name", e.target.value)}
+                        />
+                        <input
+                          type="number"
+                          className="flex-1 mr-4 py-2 px-4 bg-neutral-900 text-white rounded"
+                          value={localEditData.times}
+                          onChange={(e) =>
+                            handleChange("times", e.target.value)
+                          }
+                        />
+                        <input
+                          type="text"
+                          className={`flex-1 py-2 px-4 bg-neutral-900 rounded ${
+                            localEditData.difficulty === "Easy"
+                              ? "text-neutral-100"
+                              : localEditData.difficulty === "Medium"
+                              ? "text-neutral-400"
+                              : "text-neutral-600"
+                          }`}
+                          value={localEditData.difficulty}
+                          onChange={(e) =>
+                            handleChange("difficulty", e.target.value)
+                          }
+                        />
+                        <button
+                          className="bg-white text-black py-2 px-4 rounded ml-4"
+                          onClick={handleUpdateClick}
+                        >
+                          Update
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <p className="flex-1 mr-4 py-2 px-4">{question.name}</p>
+                        <p className="flex-1 mr-4 py-2 px-4">
+                          {question.times}
+                        </p>
+                        <p
+                          className={`flex-1 py-2 px-4 ${
+                            question.difficulty === "Easy"
+                              ? "text-neutral-50"
+                              : question.difficulty === "Medium"
+                              ? "text-neutral-400"
+                              : "text-neutral-600"
+                          }`}
+                        >
+                          {question.difficulty}
+                        </p>
+                        <button
+                          className="bg-neutral-800 text-white py-2 px-4 rounded"
+                          onClick={() => handleEditClick(index)}
+                        >
+                          Edit
+                        </button>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
