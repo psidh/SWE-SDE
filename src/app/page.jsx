@@ -13,7 +13,7 @@ export default function Page() {
   const [localEditData, setLocalEditData] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://localhost:3000/api/v1", {
+      const response = await fetch("/api/v1", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export default function Page() {
 
   const handleUpdateClick = async () => {
     try {
-      await fetch("http://localhost:3000/api/v1", {
+      await fetch("/api/v1", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
