@@ -11,9 +11,6 @@ export default function Page() {
   const [data, setData] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [localEditData, setLocalEditData] = useState(null);
-  const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false); //
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("http://localhost:3000/api/v1", {
@@ -67,52 +64,8 @@ export default function Page() {
   };
 
   const groupedData = groupByTopic(data);
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    toast.loading("Authenticating...", { duration: 1000 });
-    if (password === "19022023") {
-      toast.success("Authenticated!", { duration: 2000 });
-      setIsAuthenticated(true);
-    } else {
-      toast.error("Incorrect password!", { duration: 2000 });
-    }
-  };
-
   return (
     <div>
-      {!isAuthenticated ? (
-        <div className="flex flex-col items-center">
-          <Toaster />
-          <form
-            onSubmit={handlePasswordSubmit}
-            className="flex flex-col items-center justify-center h-[100vh]"
-          >
-            <div className="flex space-x-4 pb-4 text-3xl">
-              <FaGoogle />
-              <FaApple />
-              <FaMeta />
-              <FaAmazon />
-              <FaMicrosoft />
-            </div>
-            <h2 className="text-2xl font-semibold mb-4 text-green-500">
-              Encrypted
-            </h2>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border bg-black border-neutral-800 rounded py-2 px-4 mb-4 text-white"
-              placeholder="Enter code"
-            />
-            <button
-              type="submit"
-              className="bg-neutral-800 text-white py-2 px-4 rounded w-full"
-            >
-              Submit
-            </button>
-          </form>
-        </div>
-      ) : (
         <div className="py-24 px-4 md:px-16">
           <Toaster />
           <h1 className="text-2xl text-center flex-1 md:text-4xl py-6 px-4 font-medium">
@@ -204,7 +157,6 @@ export default function Page() {
             </div>
           ))}
         </div>
-      )}
     </div>
   );
 }
