@@ -9,10 +9,13 @@ export default function Page() {
   const [editIndex, setEditIndex] = useState(null);
   const [localEditData, setLocalEditData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const ROUTE = process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : "http:localhost:3000/api/v1";
+  console.log(ROUTE);
+
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/v1", {
+      const response = await fetch(ROUTE, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -34,9 +37,10 @@ export default function Page() {
     setLocalEditData({ ...localEditData, [field]: value });
   };
 
+  
   const handleUpdateClick = async () => {
     try {
-      const response = await fetch("/api/v1", {
+      const response = await fetch(ROUTE, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
