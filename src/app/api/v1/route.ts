@@ -9,23 +9,17 @@ export async function GET() {
   return NextResponse.json(questions);
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(request: NextRequest) {
   try {
-    const questionsToUpdate = await req.json();
-
-    const updatePromises = questionsToUpdate.map(async (question: any) => {
-      const { _id, ...updatedData } = question;
-      return Question.findByIdAndUpdate(_id, updatedData, { new: true });
-    });
-
-    const updatedQuestions = await Promise.all(updatePromises);
-
-    return NextResponse.json(updatedQuestions);
+    const data = await request.json();
+    const { _id, name, topic, times, difficulty } = data[0]; // assuming single update at a time
+    const question = await Question.findByIdAndUpdate(_id, { name, topic, times, difficulty }, { new: true });
+    if (!question) {
+      return NextResponse.json({ error: "Question not found" }, { status: 404 });
+    }
+    return NextResponse.json(question);
   } catch (error) {
-    console.error("Failed to update questions:", error);
-    return NextResponse.json({
-      status: 500,
-      message: "Failed to update questions",
-    });
+    console.error(error);
+    return NextResponse.json({ error: "Failed to update question" }, { status: 500 });
   }
 }

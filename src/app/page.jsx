@@ -13,12 +13,16 @@ export default function Page() {
   const [localEditData, setLocalEditData] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/v1", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "/api/v1",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+        { cache: "no-store" }
+      );
       const data = await response.json();
       setData(data);
     };
@@ -37,13 +41,17 @@ export default function Page() {
 
   const handleUpdateClick = async () => {
     try {
-      await fetch("/api/v1", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
+      await fetch(
+        "/api/v1",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify([localEditData]),
         },
-        body: JSON.stringify([localEditData]),
-      });
+        { cache: "no-store" }
+      );
       const updatedData = [...data];
       updatedData[editIndex] = localEditData;
       setData(updatedData);
@@ -54,16 +62,6 @@ export default function Page() {
       console.error("Failed to update data:", error);
     }
   };
-
-  const groupByTopic = (questions) => {
-    const grouped = {};
-    ["Graph", "Tree", "Recursion", "DP"].forEach((topic) => {
-      grouped[topic] = questions.filter((q) => q.topic === topic);
-    });
-    return grouped;
-  };
-
-  const groupedData = groupByTopic(data);
   return (
     <div>
       <div className="py-24 px-4 md:px-16">
@@ -78,80 +76,71 @@ export default function Page() {
           <FaAmazon />
           <FaMicrosoft />
         </div>
-        {Object.entries(groupedData).map(([topic, questions]) => (
-          <div key={topic} className="py-6">
-            <h2 className="font-mono mb-8 text-xl py-2 px-4 rounded-lg mx-4 text-center md:text-2xl">
-              {topic === "DP" ? "Dynamic Programming" : topic}
-            </h2>
-            <div className="grid grid-cols-1 lg:gap-x-8 gap-y-4">
-              {questions.map((question, index) => (
-                <div key={question._id} className="">
-                  {editIndex === index ? (
-                    <div className="flex lg:flex-row flex-col items-center justify-center border border-neutral-800 rounded-xl p-4">
-                      <input
-                        type="text"
-                        className="flex-1 lg:mr-4 py-2 px-4 bg-neutral-900 text-white rounded my-2"
-                        value={localEditData.name}
-                        onChange={(e) => handleChange("name", e.target.value)}
-                      />
-                      <input
-                        type="number"
-                        className="flex-1 lg:mr-4 py-2 px-4 bg-neutral-900 text-white rounded my-2"
-                        value={localEditData.times}
-                        onChange={(e) => handleChange("times", e.target.value)}
-                      />
-                      <select
-                        className={`flex-1 py-2 px-4 bg-neutral-900 rounded my-2 ${
-                          localEditData.difficulty === "Easy"
-                            ? "text-neutral-100"
-                            : localEditData.difficulty === "Medium"
-                            ? "text-neutral-400"
-                            : "text-neutral-600"
-                        }`}
-                        value={localEditData.difficulty}
-                        onChange={(e) =>
-                          handleChange("difficulty", e.target.value)
-                        }
-                      >
-                        <option value="Easy">Easy</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Hard">Hard</option>
-                      </select>
-                      <button
-                        className="bg-white text-black py-2 px-4 rounded lg:ml-4 my-2"
-                        onClick={handleUpdateClick}
-                      >
-                        Update
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center border border-neutral-800 rounded-xl p-2 md:p-4 text-sm md:text-lg">
-                      <p className="flex-1 mr-4 py-2 px-4">{question.name}</p>
-                      <p className="flex-1 mr-4 py-2 px-4">{question.times}</p>
-                      <p
-                        className={`flex-1 py-2 px-4 ${
-                          question.difficulty === "Easy"
-                            ? "text-neutral-50"
-                            : question.difficulty === "Medium"
-                            ? "text-neutral-400"
-                            : "text-neutral-600"
-                        }`}
-                      >
-                        {question.difficulty}
-                      </p>
-                      <button
-                        className="bg-neutral-800 text-white py-2 px-4 rounded"
-                        onClick={() => handleEditClick(index)}
-                      >
-                        Edit
-                      </button>
-                    </div>
-                  )}
+        <div className="grid grid-cols-1 lg:gap-x-8 gap-y-4">
+          {data.map((question, index) => (
+            <div key={question._id} className="">
+              {editIndex === index ? (
+                <div className="flex lg:flex-row flex-col items-center justify-center border border-neutral-800 rounded-xl p-4">
+                  <input
+                    type="text"
+                    className="flex-1 lg:mr-4 py-2 px-4 bg-neutral-900 text-white rounded my-2"
+                    value={localEditData.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    className="flex-1 lg:mr-4 py-2 px-4 bg-neutral-900 text-white rounded my-2"
+                    value={localEditData.times}
+                    onChange={(e) => handleChange("times", e.target.value)}
+                  />
+                  <select
+                    className={`flex-1 py-2 px-4 bg-neutral-900 rounded my-2 ${
+                      localEditData.difficulty === "Easy"
+                        ? "text-neutral-100"
+                        : localEditData.difficulty === "Medium"
+                        ? "text-neutral-400"
+                        : "text-neutral-600"
+                    }`}
+                    value={localEditData.difficulty}
+                    onChange={(e) => handleChange("difficulty", e.target.value)}
+                  >
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                  </select>
+                  <button
+                    className="bg-white text-black py-2 px-4 rounded lg:ml-4 my-2"
+                    onClick={handleUpdateClick}
+                  >
+                    Update
+                  </button>
                 </div>
-              ))}
+              ) : (
+                <div className="flex items-center border border-neutral-800 rounded-xl p-2 md:p-4 text-sm md:text-lg">
+                  <p className="flex-1 mr-4 py-2 px-4">{question.name}</p>
+                  <p className="flex-1 mr-4 py-2 px-4">{question.times}</p>
+                  <p
+                    className={`flex-1 py-2 px-4 ${
+                      question.difficulty === "Easy"
+                        ? "text-neutral-50"
+                        : question.difficulty === "Medium"
+                        ? "text-neutral-400"
+                        : "text-neutral-600"
+                    }`}
+                  >
+                    {question.difficulty}
+                  </p>
+                  <button
+                    className="bg-neutral-800 text-white py-2 px-4 rounded"
+                    onClick={() => handleEditClick(index)}
+                  >
+                    Edit
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
