@@ -17,7 +17,7 @@ export default function Page() {
         headers: {
           "Content-Type": "application/json",
         },
-      }, {cache: "no-store"});
+      });
       const data = await response.json();
       setData(data);
     };
@@ -43,7 +43,7 @@ export default function Page() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify([localEditData]),
-      }, { cache: 'no-store' });
+      });
       console.log(response);
       if (!response.ok) {
         throw new Error("Failed to update data");
