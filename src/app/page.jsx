@@ -9,7 +9,7 @@ export default function Page() {
   const [editIndex, setEditIndex] = useState(null);
   const [localEditData, setLocalEditData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const ROUTE = process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : "http:localhost:3000/api/v1";
+  const ROUTE = process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : "http://localhost:3000/api/v1";
   console.log(ROUTE);
 
 
