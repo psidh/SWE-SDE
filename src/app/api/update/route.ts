@@ -19,8 +19,8 @@ export async function PUT(request: NextRequest) {
       }
       
       return NextResponse.json(question);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.log(error);
       return NextResponse.json({ error: "Failed to update question" }, { status: 500 });
     }
   }
