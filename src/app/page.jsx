@@ -54,9 +54,11 @@ export default function Page() {
     }
   };
 
-  const filteredData = data.filter((question) =>
-    question.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredData = data
+    .map((question, index) => ({ ...question, originalIndex: index }))
+    .filter((question) =>
+      question.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   return (
     <div>
@@ -82,9 +84,9 @@ export default function Page() {
           />
         </div>
         <div className="grid grid-cols-1 gap-x-1 lg:gap-x-8 gap-y-4">
-          {filteredData.map((question, index) => (
+          {filteredData.map((question) => (
             <div key={question._id} className="">
-              {editIndex === index ? (
+              {editIndex === question.originalIndex ? (
                 <div className="flex flex-col sm:p-0 p-2 sm:flex-row items-start sm:items-center border border-neutral-800 rounded-xl  md:p-4 text-sm md:text-lg">
                   <input
                     type="text"
@@ -138,7 +140,7 @@ export default function Page() {
                   </p>
                   <button
                     className="bg-neutral-800 text-white py-2 px-4 rounded mr-1 w-full sm:w-auto"
-                    onClick={() => handleEditClick(index)}
+                    onClick={() => handleEditClick(question.originalIndex)}
                   >
                     Edit
                   </button>
