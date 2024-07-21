@@ -17,7 +17,7 @@ export default function Page() {
         headers: {
           "Content-Type": "application/json",
         },
-      }, {cache: "no-store"});
+      });
       const data = await response.json();
       setData(data);
     };
@@ -36,13 +36,17 @@ export default function Page() {
 
   const handleUpdateClick = async () => {
     try {
-      await fetch("/api/v1", {
+      const response = await fetch("/api/v1", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify([localEditData]),
-      }, {cache: "no-store"});
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("Failed to update data");
+      }
       const updatedData = [...data];
       updatedData[editIndex] = localEditData;
       setData(updatedData);
