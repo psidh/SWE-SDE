@@ -37,7 +37,7 @@ export default function Page() {
   
   const handleUpdateClick = async () => {
     try {
-      const response = await fetch("/api/v1", {
+      const response = await fetch("/api/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
