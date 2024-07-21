@@ -12,8 +12,8 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const data = await request.json();
-    const { _id, name, topic, times, difficulty } = data[0]; // assuming single update at a time
-    const question = await Question.findByIdAndUpdate(_id, { name, topic, times, difficulty }, { new: true });
+    const { _id, name, times, difficulty } = data[0];
+    const question = await Question.findByIdAndUpdate(_id, { name, times, difficulty }, { new: true });
     if (!question) {
       return NextResponse.json({ error: "Question not found" }, { status: 404 });
     }

@@ -1,28 +1,22 @@
 "use client";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { FaGoogle } from "react-icons/fa";
-import { FaMicrosoft } from "react-icons/fa";
-import { FaApple } from "react-icons/fa";
+import { FaGoogle, FaMicrosoft, FaApple, FaAmazon } from "react-icons/fa";
 import { FaMeta } from "react-icons/fa6";
-import { FaAmazon } from "react-icons/fa";
 
 export default function Page() {
   const [data, setData] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [localEditData, setLocalEditData] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(
-        "/api/v1",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const response = await fetch("/api/v1/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
         },
-        { cache: "no-store" }
-      );
+      });
       const data = await response.json();
       setData(data);
     };
@@ -41,17 +35,13 @@ export default function Page() {
 
   const handleUpdateClick = async () => {
     try {
-      await fetch(
-        "/api/v1",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify([localEditData]),
+      await fetch("/api/v1/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-        { cache: "no-store" }
-      );
+        body: JSON.stringify([localEditData]),
+      });
       const updatedData = [...data];
       updatedData[editIndex] = localEditData;
       setData(updatedData);
@@ -62,6 +52,7 @@ export default function Page() {
       console.error("Failed to update data:", error);
     }
   };
+
   return (
     <div>
       <div className="py-24 px-4 md:px-16">
