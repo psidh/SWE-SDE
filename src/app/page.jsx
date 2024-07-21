@@ -21,7 +21,8 @@ export default function Page() {
         },
       }, {cache: "no-store"});
       const data = await response.json();
-      // console.log(data);
+
+      console.log(data);
       setData(data);
     };
 
