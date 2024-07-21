@@ -3,6 +3,8 @@ import connect from "@/db/db";
 import { NextRequest, NextResponse } from "next/server";
 import Question from "@/models/questionModel";
 
+connect();
+
 export async function PUT(request: NextRequest) {
     try {
       const data = await request.json();
