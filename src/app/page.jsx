@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { cache, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { FaGoogle, FaMicrosoft, FaApple, FaAmazon } from "react-icons/fa";
 import { FaMeta } from "react-icons/fa6";
 
 export default function Page() {
+  const router = useRouter();
   const [data, setData] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [localEditData, setLocalEditData] = useState(null);
@@ -17,7 +19,7 @@ export default function Page() {
         headers: {
           "Content-Type": "application/json",
         },
-      });
+      }, {cache: "no-store"});
       const data = await response.json();
       setData(data);
     };
@@ -43,7 +45,7 @@ export default function Page() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify([localEditData]),
-      });
+      }, {cache: "no-store"});
       console.log(response);
       if (!response.ok) {
         throw new Error("Failed to update data");
@@ -53,6 +55,7 @@ export default function Page() {
       setData(updatedData);
       setEditIndex(null);
       toast.success("Data updated successfully!");
+      router.refresh();
     } catch (error) {
       toast.error("Failed to update data!");
       console.error("Failed to update data:", error);
