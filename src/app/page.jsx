@@ -125,7 +125,7 @@ export default function Page() {
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center border border-neutral-800 rounded-xl p-4">
+                    <div className="flex items-center border border-neutral-800 rounded-xl p-2 md:p-4 text-sm md:text-lg">
                       <p className="flex-1 mr-4 py-2 px-4">{question.name}</p>
                       <p className="flex-1 mr-4 py-2 px-4">{question.times}</p>
                       <p
